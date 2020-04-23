@@ -10,8 +10,8 @@ public class User implements Serializable {
 	private String loginId;
 	private String password;
 	private String name;
-	private String branchId;
-	private String divPostId;
+	private int branchId;
+	private int divPostId;
 	private Date createdDate;
 	private Date updatedDate;
 	public int getId() {
@@ -38,16 +38,16 @@ public class User implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getBranchId() {
+	public int getBranchId() {
 		return branchId;
 	}
-	public void setBranchId(String branchId) {
+	public void setBranchId(int branchId) {
 		this.branchId = branchId;
 	}
-	public String getDivPostId() {
+	public int getDivPostId() {
 		return divPostId;
 	}
-	public void setDivPostId(String divPostId) {
+	public void setDivPostId(int divPostId) {
 		this.divPostId = divPostId;
 	}
 	public Date getCreatedDate() {

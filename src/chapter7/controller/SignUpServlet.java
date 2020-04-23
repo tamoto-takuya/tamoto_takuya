@@ -40,8 +40,8 @@ public class SignUpServlet extends HttpServlet {
 			user.setLoginId(request.getParameter("login_id"));
 			user.setPassword(request.getParameter("password"));
 			user.setName(request.getParameter("name"));
-			user.setBranchId(request.getParameter("branch_id"));
-			user.setDivPostId(request.getParameter("div_post_id"));
+			user.setBranchId(Integer.parseInt(request.getParameter("branch_id")));
+			user.setDivPostId(Integer.parseInt(request.getParameter("div_post_id")));
 
 			new UserService().register(user);
 
@@ -53,8 +53,9 @@ public class SignUpServlet extends HttpServlet {
 	}
 
 	private boolean isValid(HttpServletRequest request, List<String> messages) {
-		String loginId = request.getParameter("loginId");
+		String loginId = request.getParameter("login_id");
 		String password = request.getParameter("password");
+		String password1 = request.getParameter("password1");
 
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
@@ -62,6 +63,11 @@ public class SignUpServlet extends HttpServlet {
 		if (StringUtils.isEmpty(password) == true) {
 			messages.add("パスワードを入力してください");
 		}
+
+		if (password.equals(password1)) {
+			messages.add("パスワードが一致しません");
+		}
+
 		// TODO アカウントが既に利用されていないか、IDが既に登録されていないかなどの確認も必要
 		if (messages.size() == 0) {
 			return true;
