@@ -11,9 +11,10 @@ public class User implements Serializable {
 	private String password;
 	private String name;
 	private int branchId;
-	private int divPostId;
+	private int postId;
 	private Date createdDate;
 	private Date updatedDate;
+
 	public int getId() {
 		return id;
 	}
@@ -44,11 +45,11 @@ public class User implements Serializable {
 	public void setBranchId(int branchId) {
 		this.branchId = branchId;
 	}
-	public int getDivPostId() {
-		return divPostId;
+	public int getPostId() {
+		return postId;
 	}
-	public void setDivPostId(int divPostId) {
-		this.divPostId = divPostId;
+	public void setPostId(int postId) {
+		this.postId = postId;
 	}
 	public Date getCreatedDate() {
 		return createdDate;

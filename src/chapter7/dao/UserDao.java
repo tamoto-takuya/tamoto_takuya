@@ -10,7 +10,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter7.beans.User;
+import chapter7.exception.NoRowsUpdatedRuntimeException;
 import chapter7.exception.SQLRuntimeException;
 
 public class UserDao {
@@ -25,7 +28,7 @@ public class UserDao {
 			sql.append(", password");
 			sql.append(", name");
 			sql.append(", branch_id");
-			sql.append(", div_post_id");
+			sql.append(", post_id");
 			sql.append(", created_date");
 			sql.append(", updated_date");
 			sql.append(") VALUES (");
@@ -44,7 +47,7 @@ public class UserDao {
 			ps.setString(2, user.getPassword());
 			ps.setString(3, user.getName());
 			ps.setInt(4, user.getBranchId());
-			ps.setInt(5, user.getDivPostId());
+			ps.setInt(5, user.getPostId());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
@@ -53,7 +56,7 @@ public class UserDao {
 		}
 	}
 
-	public List<User> getUser(Connection connection, int num) {
+	public List<User> getUsers(Connection connection, int num) {
 
 		PreparedStatement ps = null;
 		try {
@@ -77,18 +80,20 @@ public class UserDao {
 		List<User> ret = new ArrayList<User>();
 		try {
 			while (rs.next()) {
+				int id = rs.getInt("Id");
 				String loginId = rs.getString("login_id");
 				String name = rs.getString("name");
 				int branchId = rs.getInt("branch_id");
-				int divPostId = rs.getInt("div_post_id");
+				int postId = rs.getInt("post_id");
 				Timestamp createdDate = rs.getTimestamp("created_date");
 				Timestamp updatedDate = rs.getTimestamp("updated_date");
 
 				User userList = new User();
+				userList.setId(id);
 				userList.setLoginId(loginId);
 				userList.setName(name);
 				userList.setBranchId(branchId);
-				userList.setDivPostId(divPostId);
+				userList.setPostId(postId);
 				userList.setCreatedDate(createdDate);
 				userList.setUpdatedDate(updatedDate);
 
@@ -99,6 +104,89 @@ public class UserDao {
 			close(rs);
 		}
 	}
+
+	public User getUser(Connection connection, int id) {
+
+		PreparedStatement ps = null;
+		try {
+			String sql = "SELECT * FROM users WHERE id = ?";
+
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+
+			ResultSet rs = ps.executeQuery();
+			List<User> userList = toUserList(rs);
+			if (userList.isEmpty() == true) {
+				return null;
+			} else if (2 <= userList.size()) {
+				throw new IllegalStateException("2 <= userList.size()");
+			} else {
+				return userList.get(0);
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
+	public void update(Connection connection, User user) {
+
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+
+			if (StringUtils.isEmpty(user.getPassword()) == true) {
+				sql.append("UPDATE users SET");
+				sql.append(" login_id = ?");
+				sql.append(", name = ?");
+				sql.append(", branch_id = ?");
+				sql.append(", post_id = ?");
+				sql.append(", updated_date = CURRENT_TIMESTAMP");
+				sql.append(" WHERE");
+				sql.append(" id = ?");
+
+				ps = connection.prepareStatement(sql.toString());
+
+				ps.setString(1, user.getLoginId());
+				ps.setString(2, user.getName());
+				ps.setInt(3, user.getBranchId());
+				ps.setInt(4, user.getPostId());
+				ps.setInt(5, user.getId());
+
+			} else {
+				sql.append("UPDATE users SET");
+				sql.append(" login_id = ?");
+				sql.append(", password = ?");
+				sql.append(", name = ?");
+				sql.append(", branch_id = ?");
+				sql.append(", post_id = ?");
+				sql.append(", updated_date = CURRENT_TIMESTAMP");
+				sql.append(" WHERE");
+				sql.append(" id = ?");
+
+				ps = connection.prepareStatement(sql.toString());
+
+				ps.setString(1, user.getLoginId());
+				ps.setString(2, user.getPassword());
+				ps.setString(3, user.getName());
+				ps.setInt(4, user.getBranchId());
+				ps.setInt(5, user.getPostId());
+				ps.setInt(6, user.getId());
+			}
+
+			int count = ps.executeUpdate();
+			if (count == 0) {
+				throw new NoRowsUpdatedRuntimeException();
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+
+	}
+
 
 }
 

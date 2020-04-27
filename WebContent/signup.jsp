@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<div class="main-contents">
-			<h1>ユーザー管理システム</h1>
+			<h1>ユーザー新規登録ページ</h1>
 			<c:if test="${ not empty errorMessages }">
 				<div class="errorMessages">
 					<ul>
@@ -39,8 +39,8 @@
 				<label	for="branch_id">支店番号</label><br>
 				<input name="branch_id" id="branch_id"> <br>
 
-				<label for="div_post_id">部署・役職</label><br>
-				<input name="div_post_id" id="div_post_id"><br>
+				<label for="post_id">部署・役職</label><br>
+				<input name="post_id" id="post_id"><br>
 
 				<input type="submit" value="登録">  <a href="./">戻る</a>
 			</form>
