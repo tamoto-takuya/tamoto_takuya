@@ -6,6 +6,8 @@ import static chapter7.utils.DBUtil.*;
 import java.sql.Connection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter7.beans.User;
 import chapter7.dao.UserDao;
 import chapter7.utils.CipherUtil;
@@ -39,14 +41,14 @@ public class UserService {
 
 	private static final int LIMIT_NUM = 1000;
 
-	public List<User> getUser() {
+	public List<User> getUsers() {
 
 		Connection connection = null;
 		try {
 			connection = getConnection();
 
 			UserDao userListDao = new UserDao();
-			List<User> ret = userListDao.getUser(connection, LIMIT_NUM);
+			List<User> ret = userListDao.getUsers(connection, LIMIT_NUM);
 
 			commit(connection);
 
@@ -61,4 +63,55 @@ public class UserService {
 			close(connection);
 		}
 	}
+
+	public User getUser(int userId) {
+
+		Connection connection = null;
+		try {
+			connection = getConnection();
+
+			UserDao userDao = new UserDao();
+			User user = userDao.getUser(connection, userId);
+
+			commit(connection);
+
+			return user;
+		} catch (RuntimeException e) {
+			rollback(connection);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+
+	public void update(User user) {
+
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			if (StringUtils.isEmpty(user.getPassword()) == false) {
+				String encPassword = CipherUtil.encrypt(user.getPassword());
+				user.setPassword(encPassword);
+			}
+
+			UserDao userDao = new UserDao();
+			userDao.update(connection, user);
+
+			commit(connection);
+		} catch (RuntimeException e) {
+			rollback(connection);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+
+
+
 }

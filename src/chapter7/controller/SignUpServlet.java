@@ -41,12 +41,13 @@ public class SignUpServlet extends HttpServlet {
 			user.setPassword(request.getParameter("password"));
 			user.setName(request.getParameter("name"));
 			user.setBranchId(Integer.parseInt(request.getParameter("branch_id")));
-			user.setDivPostId(Integer.parseInt(request.getParameter("div_post_id")));
+			user.setPostId(Integer.parseInt(request.getParameter("post_id")));
 
 			new UserService().register(user);
 
 			response.sendRedirect("./");
 		} else {
+//			request.setAttribute("errorMessages", messages);
 			session.setAttribute("errorMessages", messages);
 			response.sendRedirect("signup");
 		}
@@ -64,7 +65,7 @@ public class SignUpServlet extends HttpServlet {
 			messages.add("パスワードを入力してください");
 		}
 
-		if (password.equals(password1)) {
+		if (!password.equals(password1)) {
 			messages.add("パスワードが一致しません");
 		}
 

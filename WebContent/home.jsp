@@ -20,19 +20,20 @@
 						<th>名前</th>
 						<th>支店番号</th>
 						<th>部署/役職</th>
+						<th>ユーザー状態</th>
 					</tr>
 					<c:forEach items="${userList}" var ="user">
 						<tr>
-							<td><c:out value="${user.loginId}" /></td>
+							<td><a href="settings?id=${user.id}"><c:out value="${user.loginId}" /></a></td>
 							<td><c:out value="${user.name}" /></td>
 							<td><c:out value="${user.branchId}" /></td>
-							<td><c:out value="${user.divPostId}" /></td>
+							<td><c:out value="${user.postId}" /></td>
+
 						</tr>
 					</c:forEach>
 				</table>
 				<a href="signup">新規登録</a>
 			</div>
-			<div class="copyright"> Copyright(c)YourName</div>
 		</div>
 	</body>
 </html>
