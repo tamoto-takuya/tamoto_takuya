@@ -8,6 +8,15 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="./css/style.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript">
+		function disp(){
+			if(window.confirm('本当にいいんですね？')){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		</script>
 		<title>ユーザ管理システム</title>
 	</head>
 	<body>
@@ -26,9 +35,14 @@
 						<tr>
 							<td><a href="settings?id=${user.id}"><c:out value="${user.loginId}" /></a></td>
 							<td><c:out value="${user.name}" /></td>
-							<td><c:out value="${user.branchId}" /></td>
-							<td><c:out value="${user.postId}" /></td>
-
+							<td><c:out value="${user.branchName}" /></td>
+							<td><c:out value="${user.postName}" /></td>
+							<td>
+								<form action="index.jsp" method="post" onClick="disp()">
+									<input name="id" value="${user.id}" id="id" type="hidden" />
+									<input type="submit" name="status" id="status" value="${user.status}">
+								</form>
+							</td>
 						</tr>
 					</c:forEach>
 				</table>

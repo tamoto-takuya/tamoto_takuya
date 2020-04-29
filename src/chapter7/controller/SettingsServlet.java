@@ -15,6 +15,8 @@ import org.apache.commons.lang.StringUtils;
 
 import chapter7.beans.User;
 import chapter7.exception.NoRowsUpdatedRuntimeException;
+import chapter7.service.BranchService;
+import chapter7.service.PostService;
 import chapter7.service.UserService;
 
 @WebServlet(urlPatterns = { "/settings" })
@@ -28,6 +30,11 @@ public class SettingsServlet extends HttpServlet {
 		int setId = Integer.parseInt(request.getParameter("id"));
 
 		User editUser = new UserService().getUser(setId);
+		List<User> branchList = new BranchService().getBranches();
+		List<User> postList = new PostService().getPosts();
+
+		request.setAttribute("branchList", branchList);
+		request.setAttribute("postList", postList);
 		request.setAttribute("editUser", editUser);
 
 		request.getRequestDispatcher("settings.jsp").forward(request, response);

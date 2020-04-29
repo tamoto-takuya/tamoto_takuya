@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import chapter7.beans.User;
+import chapter7.exception.NoRowsUpdatedRuntimeException;
 import chapter7.service.UserService;
 
 
@@ -34,8 +35,29 @@ public class HomeServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-//		request.setAttribute("status", status);
+		User userStatus = getUserStatus(request);
 
+		try {
+			new UserService().updateStatus(userStatus);
+		} catch(NoRowsUpdatedRuntimeException e) {
+			request.getRequestDispatcher("/home.jsp").forward(request, response);
+			return;
+		}
 
+		List<User> userList = new UserService().getUsers();
+
+		request.setAttribute("userList", userList);
+
+		request.getRequestDispatcher("/home.jsp").forward(request, response);
+
+	}
+
+	private User getUserStatus(HttpServletRequest request)
+			throws IOException, ServletException {
+
+		User userStatus = new User();
+		userStatus.setId(Integer.parseInt(request.getParameter("id")));
+		userStatus.setStatus(request.getParameter("status"));
+		return userStatus;
 	}
 }

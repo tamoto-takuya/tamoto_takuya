@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 import chapter7.beans.User;
+import chapter7.service.BranchService;
+import chapter7.service.PostService;
 import chapter7.service.UserService;
 
 @WebServlet(urlPatterns = { "/signup" })
@@ -23,6 +25,12 @@ public class SignUpServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
+
+		List<User> branchList = new BranchService().getBranches();
+		List<User> postList = new PostService().getPosts();
+
+		request.setAttribute("branchList", branchList);
+		request.setAttribute("postList", postList);
 
 		request.getRequestDispatcher("signup.jsp").forward(request, response);
 	}
@@ -47,8 +55,9 @@ public class SignUpServlet extends HttpServlet {
 
 			response.sendRedirect("./");
 		} else {
-//			request.setAttribute("errorMessages", messages);
+
 			session.setAttribute("errorMessages", messages);
+
 			response.sendRedirect("signup");
 		}
 	}

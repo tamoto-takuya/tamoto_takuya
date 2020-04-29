@@ -12,8 +12,11 @@ public class User implements Serializable {
 	private String name;
 	private int branchId;
 	private int postId;
+	private String status;
 	private Date createdDate;
 	private Date updatedDate;
+	private String branchName;
+	private String postName;
 
 	public int getId() {
 		return id;
@@ -51,6 +54,12 @@ public class User implements Serializable {
 	public void setPostId(int postId) {
 		this.postId = postId;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -63,10 +72,20 @@ public class User implements Serializable {
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
 	}
+	public String getBranchName() {
+		return branchName;
+	}
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
+	public String getPostName() {
+		return postName;
+	}
+	public void setPostName(String postName) {
+		this.postName = postName;
+	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
-
 
 }

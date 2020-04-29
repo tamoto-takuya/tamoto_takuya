@@ -29,6 +29,7 @@ public class UserDao {
 			sql.append(", name");
 			sql.append(", branch_id");
 			sql.append(", post_id");
+			sql.append(", status");
 			sql.append(", created_date");
 			sql.append(", updated_date");
 			sql.append(") VALUES (");
@@ -37,6 +38,7 @@ public class UserDao {
 			sql.append(", ?");
 			sql.append(", ?");
 			sql.append(", ?");
+			sql.append(", '活動'");
 			sql.append(", CURRENT_TIMESTAMP"); // created_date
 			sql.append(", CURRENT_TIMESTAMP"); // updated_date
 			sql.append(")");
@@ -48,6 +50,7 @@ public class UserDao {
 			ps.setString(3, user.getName());
 			ps.setInt(4, user.getBranchId());
 			ps.setInt(5, user.getPostId());
+
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
@@ -56,17 +59,33 @@ public class UserDao {
 		}
 	}
 
-	public List<User> getUsers(Connection connection, int num) {
+	public List<User> getUsers(Connection connection, int id) {
 
 		PreparedStatement ps = null;
 		try {
-			String sql = "SELECT * FROM users";
+			StringBuilder  sql = new StringBuilder();
+			sql.append("SELECT ");
+			sql.append("users.id as id,");
+			sql.append("users.login_id as login_id, ");
+			sql.append("users.name as name, ");
+			sql.append("users.branch_id as branch_id, ");
+			sql.append("users.post_id as post_id, ");
+			sql.append("users.created_date as created_date, ");
+			sql.append("users.updated_date as updated_date, ");
+			sql.append("users.status as status, ");
+			sql.append("branches.branch_name as branch_name, ");
+			sql.append("posts.post_name as post_name ");
+			sql.append("FROM users ");
+			sql.append("INNER JOIN branches ");
+			sql.append("ON users.branch_id = branches.branch_id ");
+			sql.append("INNER JOIN posts ");
+			sql.append("ON users.post_id = posts.post_id ");
 
 			ps = connection.prepareStatement(sql.toString());
 
 			ResultSet rs = ps.executeQuery();
-			List<User> ret = toUserList(rs);
-			return ret;
+			List<User> userList = toUserList(rs);
+			return userList;
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
 		} finally {
@@ -85,8 +104,11 @@ public class UserDao {
 				String name = rs.getString("name");
 				int branchId = rs.getInt("branch_id");
 				int postId = rs.getInt("post_id");
+				String status = rs.getString("status");
 				Timestamp createdDate = rs.getTimestamp("created_date");
 				Timestamp updatedDate = rs.getTimestamp("updated_date");
+				String branchName = rs.getString("branch_name");
+				String postName = rs.getString("post_name");
 
 				User userList = new User();
 				userList.setId(id);
@@ -94,8 +116,11 @@ public class UserDao {
 				userList.setName(name);
 				userList.setBranchId(branchId);
 				userList.setPostId(postId);
+				userList.setStatus(status);
 				userList.setCreatedDate(createdDate);
 				userList.setUpdatedDate(updatedDate);
+				userList.setBranchName(branchName);
+				userList.setPostName(postName);
 
 				ret.add(userList);
 			}
@@ -109,10 +134,27 @@ public class UserDao {
 
 		PreparedStatement ps = null;
 		try {
-			String sql = "SELECT * FROM users WHERE id = ?";
+			StringBuilder  sql = new StringBuilder();
+			sql.append("SELECT ");
+			sql.append("users.id as id,");
+			sql.append("users.login_id as login_id, ");
+			sql.append("users.name as name, ");
+			sql.append("users.branch_id as branch_id, ");
+			sql.append("users.post_id as post_id, ");
+			sql.append("users.created_date as created_date, ");
+			sql.append("users.updated_date as updated_date, ");
+			sql.append("users.status as status, ");
+			sql.append("branches.branch_name as branch_name, ");
+			sql.append("posts.post_name as post_name ");
+			sql.append("FROM users ");
+			sql.append("INNER JOIN branches ");
+			sql.append("ON users.branch_id = branches.branch_id ");
+			sql.append("INNER JOIN posts ");
+			sql.append("ON users.post_id = posts.post_id ");
+			sql.append(" WHERE");
+			sql.append(" id = " + id);
 
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
+			ps = connection.prepareStatement(sql.toString());
 
 			ResultSet rs = ps.executeQuery();
 			List<User> userList = toUserList(rs);
@@ -184,9 +226,31 @@ public class UserDao {
 		} finally {
 			close(ps);
 		}
-
 	}
 
+	public void updateStatus(Connection connection, User user) {
+		PreparedStatement ps = null;
+		String sql = null;
+		try {
+			int id = user.getId();
+			if(user.getStatus().equals("活動")) {
+				sql = "UPDATE users set status = '停止', updated_date = CURRENT_TIMESTAMP where id =" + id;
+			} else {
+				sql = "UPDATE users set status = '活動', updated_date = CURRENT_TIMESTAMP where id =" + id;
+			}
+
+			ps = connection.prepareStatement(sql);
+
+			int count = ps.executeUpdate();
+			if (count == 0) {
+				throw new NoRowsUpdatedRuntimeException();
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
 
 }
 

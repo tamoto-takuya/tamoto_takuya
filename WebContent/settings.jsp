@@ -39,7 +39,18 @@
 				<input name="name" value="${editUser.name}" id="name"/><br />
 
 				<label for="name">支店番号</label><br />
-				<input name="branch_id" value="${editUser.branchId}" id="branch_id"/><br />
+				<select style="width: 175px" name="branch_id" id="branch_id">
+					<c:forEach items="${branchList}" var="branch">
+							<c:choose>
+								<c:when  test="${branch.branchId==edituser.branchId}">
+									<option value="${branch.branchId}" selected>${branch.branchId}</option>
+								</c:when>
+								<c:otherwise>
+									<option value="${branch.branchId}">${branch.branchName}</option>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select><br>
 
 				<label for="name">部署/役職</label><br />
 				<input name="post_id" value="${editUser.postId}" id="post_id"/><br />
