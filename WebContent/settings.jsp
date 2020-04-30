@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>${loginUser.account}の設定</title>
+		<title>ユーザー編集</title>
 		<link href="css/style.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
@@ -41,20 +41,30 @@
 				<label for="name">支店番号</label><br />
 				<select style="width: 175px" name="branch_id" id="branch_id">
 					<c:forEach items="${branchList}" var="branch">
-							<c:choose>
-								<c:when  test="${branch.branchId==edituser.branchId}">
-									<option value="${branch.branchId}" selected>${branch.branchId}</option>
-								</c:when>
-								<c:otherwise>
+						<c:choose>
+							<c:when  test="${branch.branchId==editUser.branchId}">
+								<option value="${branch.branchId}" selected>${branch.branchName}</option>
+							</c:when>
+							<c:otherwise>
 									<option value="${branch.branchId}">${branch.branchName}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</select><br>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</select><br>
 
 				<label for="name">部署/役職</label><br />
-				<input name="post_id" value="${editUser.postId}" id="post_id"/><br />
-
+				<select style="width: 175px" name="post_id" id="post_id">
+					<c:forEach items="${postList}" var="post">
+						<c:choose>
+							<c:when  test="${post.postId==editUser.postId}">
+								<option value="${post.postId}" selected>${post.postName}</option>
+							</c:when>
+							<c:otherwise>
+								<option value="${post.postId}">${post.postName}</option>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</select><br>
 
 				<input type="submit" value="登録" />    <a href="./">戻る</a>
 			</form>

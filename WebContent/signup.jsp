@@ -25,7 +25,7 @@
 			<form action="signup" method="post">
 
 				<label for="login_id">ログインID</label><br>
-			    <input name="login_id" id="login_id"><br>
+			    <input name="login_id" value="${login_id}" id="login_id"><br>
 
 			    <label for="password">パスワード</label><br>
 			    <input name="password" type="password" id="password"> <br>
@@ -34,19 +34,21 @@
 			    <input name="password1" type="password" id="password1"> <br>
 
 				<label for="name">名前</label><br>
-				<input name="name" id="name"><br>
+				<input name="name" value="${name}" id="name"><br>
 
 				<label for="branch_id">支店名</label><br>
 				<select style="width: 175px" name="branch_id" id="branch_id">
+					<option value="">--------</option>
 					<c:forEach items="${branchList}" var="branch">
-						<option value="${branch.branchId}">${branch.branchId}</option>
+						<option value="${branch.branchId}">${branch.branchName}</option>
 					</c:forEach>
 				</select><br>
 
 				<label for="post_id">部署・役職</label><br>
 				<select style="width: 175px" name="post_id" id="post_id">
+					<option value="">--------</option>
 					<c:forEach items="${postList}" var="post">
-						<option value="${post.postId}">${post.postId}</option>
+						<option value="${post.postId}">${post.postName}</option>
 					</c:forEach>
 				</select><br>
 

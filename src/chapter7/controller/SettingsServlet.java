@@ -65,6 +65,12 @@ public class SettingsServlet extends HttpServlet {
 			response.sendRedirect("./");
 		} else {
 			session.setAttribute("errorMessages", messages);
+
+			List<User> branchList = new BranchService().getBranches();
+			List<User> postList = new PostService().getPosts();
+
+			request.setAttribute("branchList", branchList);
+			request.setAttribute("postList", postList);
 			request.setAttribute("editUser", editUser);
 			request.getRequestDispatcher("settings.jsp").forward(request, response);
 		}
@@ -87,9 +93,29 @@ public class SettingsServlet extends HttpServlet {
 		String loginId = request.getParameter("login_id");
 		String password = request.getParameter("password");
 		String password1 = request.getParameter("password1");
+		String name = request.getParameter("name");
 
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
+		}
+
+		if(!loginId.matches("[0-9a-zA-Z]{6,20}")) {
+			messages.add("ログインID半角英数字6文字以上20文字以下で入力してください");
+		}
+
+		if (StringUtils.isEmpty(name) == true) {
+			messages.add("ユーザー名を入力してください");
+		}
+
+		if(!name.matches(".{1,10}")) {
+			messages.add("ユーザー名10文字以内にしてください");
+		}
+
+		if (StringUtils.isEmpty(password) == false) {
+
+			if(!password.matches("[a-zA-Z0-9!-/:-@\\[-`{-~]{6,20}")) {
+				messages.add("パスワード半角英数字記号6文字以上20文字以下で入力してください");
+			}
 		}
 
 		if (!password.equals(password1)) {

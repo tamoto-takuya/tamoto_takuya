@@ -57,21 +57,52 @@ public class SignUpServlet extends HttpServlet {
 		} else {
 
 			session.setAttribute("errorMessages", messages);
+			List<User> branchList = new BranchService().getBranches();
+			List<User> postList = new PostService().getPosts();
 
-			response.sendRedirect("signup");
+			request.setAttribute("branchList", branchList);
+			request.setAttribute("postList", postList);
+
+			request.getRequestDispatcher("signup.jsp").forward(request, response);
 		}
 	}
 
 	private boolean isValid(HttpServletRequest request, List<String> messages) {
 		String loginId = request.getParameter("login_id");
+		String name = request.getParameter("name");
 		String password = request.getParameter("password");
 		String password1 = request.getParameter("password1");
+//		int branchId = Integer.parseInt(request.getParameter("branch_id"));
+//		int postId = Integer.parseInt(request.getParameter("post_id"));
+
+		request.setAttribute("name", name);
+		request.setAttribute("login_id", loginId);
+//		request.setAttribute("branch_id", branchId);
+//		request.setAttribute("post_id", postId);
+
 
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
 		}
+
+		if(!loginId.matches("[0-9a-zA-Z]{6,20}")) {
+			messages.add("ログインID半角英数字6文字以上20文字以下で入力してください");
+		}
+
+		if (StringUtils.isEmpty(name) == true) {
+			messages.add("ユーザー名を入力してください");
+		}
+
+		if(!name.matches(".{1,10}")) {
+			messages.add("ユーザー名10文字以内にしてください");
+		}
+
 		if (StringUtils.isEmpty(password) == true) {
 			messages.add("パスワードを入力してください");
+		}
+
+		if(!password.matches("[a-zA-Z0-9!-/:-@\\[-`{-~]{6,20}")) {
+			messages.add("パスワード半角英数字6文字以上20文字以下で入力してください");
 		}
 
 		if (!password.equals(password1)) {
