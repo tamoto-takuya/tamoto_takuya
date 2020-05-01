@@ -72,13 +72,9 @@ public class SignUpServlet extends HttpServlet {
 		String name = request.getParameter("name");
 		String password = request.getParameter("password");
 		String password1 = request.getParameter("password1");
-//		int branchId = Integer.parseInt(request.getParameter("branch_id"));
-//		int postId = Integer.parseInt(request.getParameter("post_id"));
 
 		request.setAttribute("name", name);
 		request.setAttribute("login_id", loginId);
-//		request.setAttribute("branch_id", branchId);
-//		request.setAttribute("post_id", postId);
 
 
 		if (StringUtils.isEmpty(loginId) == true) {
@@ -109,7 +105,10 @@ public class SignUpServlet extends HttpServlet {
 			messages.add("パスワードが一致しません");
 		}
 
-		// TODO アカウントが既に利用されていないか、IDが既に登録されていないかなどの確認も必要
+/*		if (user.loginId.equals(loginId)) {
+			messages.add("ログインIDが被っています");
+		}
+*/
 		if (messages.size() == 0) {
 			return true;
 		} else {

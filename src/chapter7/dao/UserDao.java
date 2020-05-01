@@ -38,7 +38,7 @@ public class UserDao {
 			sql.append(", ?");
 			sql.append(", ?");
 			sql.append(", ?");
-			sql.append(", '活動'");
+			sql.append(", '0'");
 			sql.append(", CURRENT_TIMESTAMP"); // created_date
 			sql.append(", CURRENT_TIMESTAMP"); // updated_date
 			sql.append(")");
@@ -73,13 +73,13 @@ public class UserDao {
 			sql.append("users.created_date as created_date, ");
 			sql.append("users.updated_date as updated_date, ");
 			sql.append("users.status as status, ");
-			sql.append("branches.branch_name as branch_name, ");
-			sql.append("posts.post_name as post_name ");
+			sql.append("branches.name as branch_name, ");
+			sql.append("posts.name as post_name ");
 			sql.append("FROM users ");
 			sql.append("INNER JOIN branches ");
-			sql.append("ON users.branch_id = branches.branch_id ");
+			sql.append("ON users.branch_id = branches.id ");
 			sql.append("INNER JOIN posts ");
-			sql.append("ON users.post_id = posts.post_id ");
+			sql.append("ON users.post_id = posts.id ");
 
 			ps = connection.prepareStatement(sql.toString());
 
@@ -104,7 +104,7 @@ public class UserDao {
 				String name = rs.getString("name");
 				int branchId = rs.getInt("branch_id");
 				int postId = rs.getInt("post_id");
-				String status = rs.getString("status");
+				int status = rs.getInt("status");
 				Timestamp createdDate = rs.getTimestamp("created_date");
 				Timestamp updatedDate = rs.getTimestamp("updated_date");
 				String branchName = rs.getString("branch_name");
@@ -144,15 +144,15 @@ public class UserDao {
 			sql.append("users.created_date as created_date, ");
 			sql.append("users.updated_date as updated_date, ");
 			sql.append("users.status as status, ");
-			sql.append("branches.branch_name as branch_name, ");
-			sql.append("posts.post_name as post_name ");
+			sql.append("branches.name as branch_name, ");
+			sql.append("posts.name as post_name ");
 			sql.append("FROM users ");
 			sql.append("INNER JOIN branches ");
-			sql.append("ON users.branch_id = branches.branch_id ");
+			sql.append("ON users.branch_id = branches.id ");
 			sql.append("INNER JOIN posts ");
-			sql.append("ON users.post_id = posts.post_id ");
+			sql.append("ON users.post_id = posts.id ");
 			sql.append(" WHERE");
-			sql.append(" id = " + id);
+			sql.append(" users.id = " + id);
 
 			ps = connection.prepareStatement(sql.toString());
 
@@ -230,16 +230,25 @@ public class UserDao {
 
 	public void updateStatus(Connection connection, User user) {
 		PreparedStatement ps = null;
-		String sql = null;
+		StringBuilder sql = new StringBuilder();
 		try {
 			int id = user.getId();
-			if(user.getStatus().equals("活動")) {
-				sql = "UPDATE users set status = '停止', updated_date = CURRENT_TIMESTAMP where id =" + id;
+
+			if(user.getStatus() == 0) {
+				sql.append("UPDATE users SET");
+				sql.append(" status = 1");
+				sql.append(", updated_date = CURRENT_TIMESTAMP");
+				sql.append(" WHERE");
+				sql.append(" id = " + id);
 			} else {
-				sql = "UPDATE users set status = '活動', updated_date = CURRENT_TIMESTAMP where id =" + id;
+				sql.append("UPDATE users SET");
+				sql.append(" status = 0");
+				sql.append(", updated_date = CURRENT_TIMESTAMP");
+				sql.append(" WHERE");
+				sql.append(" id = " + id);
 			}
 
-			ps = connection.prepareStatement(sql);
+			ps = connection.prepareStatement(sql.toString());
 
 			int count = ps.executeUpdate();
 			if (count == 0) {

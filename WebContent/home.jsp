@@ -27,7 +27,7 @@
 					<tr>
 						<th>ID</th>
 						<th>名前</th>
-						<th>支店番号</th>
+						<th>支店名</th>
 						<th>部署/役職</th>
 						<th>ユーザー状態</th>
 					</tr>
@@ -40,7 +40,16 @@
 							<td>
 								<form action="index.jsp" method="post" onClick="disp()">
 									<input name="id" value="${user.id}" id="id" type="hidden" />
-									<input type="submit" name="status" id="status" value="${user.status}">
+									<c:choose>
+									<c:when test="${user.status==0}">
+										<input name="status" value=0 id="id" type="hidden" />
+										<button type="submit" value="活動中">活動中</button>
+									</c:when>
+									<c:otherwise>
+										<input name="status" value=1 id="id" type="hidden" />
+										<button type="submit" value="停止中">停止中</button>
+									</c:otherwise>
+									</c:choose>
 								</form>
 							</td>
 						</tr>

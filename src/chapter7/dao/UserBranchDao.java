@@ -37,8 +37,8 @@ public class UserBranchDao {
 		List<User> ret = new ArrayList<User>();
 		try {
 			while (rs.next()) {
-				int branchId = rs.getInt("branch_id");
-				String branchName = rs.getString("branch_name");
+				int branchId = rs.getInt("id");
+				String branchName = rs.getString("name");
 
 				User user = new User();
 				user.setBranchId(branchId);

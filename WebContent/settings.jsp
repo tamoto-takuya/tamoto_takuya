@@ -38,7 +38,7 @@
 				<label for="name">名前</label><br />
 				<input name="name" value="${editUser.name}" id="name"/><br />
 
-				<label for="name">支店番号</label><br />
+				<label for="name">支店名</label><br />
 				<select style="width: 175px" name="branch_id" id="branch_id">
 					<c:forEach items="${branchList}" var="branch">
 						<c:choose>

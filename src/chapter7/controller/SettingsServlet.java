@@ -28,8 +28,8 @@ public class SettingsServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		//ID取得の為、int型へ変更
 		int setId = Integer.parseInt(request.getParameter("id"));
-
 		User editUser = new UserService().getUser(setId);
+
 		List<User> branchList = new BranchService().getBranches();
 		List<User> postList = new PostService().getPosts();
 
@@ -59,8 +59,6 @@ public class SettingsServlet extends HttpServlet {
 				request.getRequestDispatcher("settings.jsp").forward(request, response);
 				return;
 			}
-
-			session.setAttribute("user", editUser);
 
 			response.sendRedirect("./");
 		} else {
@@ -122,7 +120,6 @@ public class SettingsServlet extends HttpServlet {
 			messages.add("パスワードが一致しません");
 		}
 
-		// TODO アカウントが既に利用されていないか、IDが既に登録されていないかなどの確認も必要
 		if (messages.size() == 0) {
 			return true;
 		} else {

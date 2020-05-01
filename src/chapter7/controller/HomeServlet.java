@@ -40,7 +40,7 @@ public class HomeServlet extends HttpServlet {
 		try {
 			new UserService().updateStatus(userStatus);
 		} catch(NoRowsUpdatedRuntimeException e) {
-			request.getRequestDispatcher("/home.jsp").forward(request, response);
+			request.getRequestDispatcher("./").forward(request, response);
 			return;
 		}
 
@@ -57,7 +57,7 @@ public class HomeServlet extends HttpServlet {
 
 		User userStatus = new User();
 		userStatus.setId(Integer.parseInt(request.getParameter("id")));
-		userStatus.setStatus(request.getParameter("status"));
+		userStatus.setStatus(Integer.parseInt(request.getParameter("status")));
 		return userStatus;
 	}
 }

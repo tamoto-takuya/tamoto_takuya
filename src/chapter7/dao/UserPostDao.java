@@ -38,8 +38,8 @@ public class UserPostDao {
 		List<User> ret = new ArrayList<User>();
 		try {
 			while (rs.next()) {
-				int postId = rs.getInt("post_id");
-				String postName = rs.getString("post_name");
+				int postId = rs.getInt("id");
+				String postName = rs.getString("name");
 
 				User user = new User();
 				user.setPostId(postId);
