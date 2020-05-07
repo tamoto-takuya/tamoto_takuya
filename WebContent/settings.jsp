@@ -46,7 +46,7 @@
 								<option value="${branch.branchId}" selected>${branch.branchName}</option>
 							</c:when>
 							<c:otherwise>
-									<option value="${branch.branchId}">${branch.branchName}</option>
+								<option value="${branch.branchId}">${branch.branchName}</option>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>

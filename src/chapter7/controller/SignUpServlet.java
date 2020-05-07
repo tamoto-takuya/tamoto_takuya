@@ -32,7 +32,7 @@ public class SignUpServlet extends HttpServlet {
 		request.setAttribute("branchList", branchList);
 		request.setAttribute("postList", postList);
 
-		request.getRequestDispatcher("signup.jsp").forward(request, response);
+		response.sendRedirect("./");
 	}
 
 	@Override
@@ -41,7 +41,6 @@ public class SignUpServlet extends HttpServlet {
 
 		List<String> messages = new ArrayList<String>();
 
-//		HttpSession session = request.getSession();
 		if (isValid(request, messages) == true) {
 
 			User user = new User();
@@ -60,7 +59,6 @@ public class SignUpServlet extends HttpServlet {
 				}
 
 			} catch (SQLException e) {
-				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
 			}
 
