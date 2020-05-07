@@ -4,6 +4,7 @@ import static chapter7.utils.CloseableUtil.*;
 import static chapter7.utils.DBUtil.*;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -15,7 +16,7 @@ import chapter7.utils.CipherUtil;
 
 public class UserService {
 
-	public void register(User user) {
+	public int register(User user) throws SQLException {
 
 		Connection connection = null;
 		try {
@@ -25,9 +26,16 @@ public class UserService {
 			user.setPassword(encPassword);
 
 			UserDao userDao = new UserDao();
-			userDao.insert(connection, user);
 
-			commit(connection);
+			if (userDao.loginId(connection, user)==0) {
+				userDao.insert(connection, user);
+				commit(connection);
+				return 1;
+			} else {
+				return 0;
+			}
+
+
 		} catch (RuntimeException e) {
 			rollback(connection);
 			throw e;

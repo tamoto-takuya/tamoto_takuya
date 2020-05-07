@@ -1,6 +1,7 @@
 package chapter7.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -41,7 +41,7 @@ public class SignUpServlet extends HttpServlet {
 
 		List<String> messages = new ArrayList<String>();
 
-		HttpSession session = request.getSession();
+//		HttpSession session = request.getSession();
 		if (isValid(request, messages) == true) {
 
 			User user = new User();
@@ -51,12 +51,23 @@ public class SignUpServlet extends HttpServlet {
 			user.setBranchId(Integer.parseInt(request.getParameter("branch_id")));
 			user.setPostId(Integer.parseInt(request.getParameter("post_id")));
 
-			new UserService().register(user);
+			try {
+				int id = new UserService().register(user);
+				if (id ==0) {
+					messages.add("ログインIDが既に存在します");
+					request.setAttribute("errorMessages", messages);
+					request.getRequestDispatcher("signup.jsp").forward(request, response);
+				}
+
+			} catch (SQLException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
 
 			response.sendRedirect("./");
 		} else {
 
-			session.setAttribute("errorMessages", messages);
+			request.setAttribute("errorMessages", messages);
 			List<User> branchList = new BranchService().getBranches();
 			List<User> postList = new PostService().getPosts();
 
@@ -105,10 +116,6 @@ public class SignUpServlet extends HttpServlet {
 			messages.add("パスワードが一致しません");
 		}
 
-/*		if (user.loginId.equals(loginId)) {
-			messages.add("ログインIDが被っています");
-		}
-*/
 		if (messages.size() == 0) {
 			return true;
 		} else {

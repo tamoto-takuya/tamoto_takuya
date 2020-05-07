@@ -59,6 +59,28 @@ public class UserDao {
 		}
 	}
 
+	public int loginId(Connection connection, User user)
+			throws SQLException {
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "SELECT COUNT(login_id ='" + user.getLoginId() + "' or null)FROM users";
+
+			ps = connection.prepareStatement(sql);
+			int id = 0;
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				id = rs.getInt("COUNT(login_id ='" + user.getLoginId() + "' or null)");
+			}
+			return id;
+
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
 	public List<User> getUsers(Connection connection, int id) {
 
 		PreparedStatement ps = null;
@@ -232,23 +254,29 @@ public class UserDao {
 		PreparedStatement ps = null;
 		StringBuilder sql = new StringBuilder();
 		try {
-			int id = user.getId();
 
 			if(user.getStatus() == 0) {
 				sql.append("UPDATE users SET");
 				sql.append(" status = 1");
 				sql.append(", updated_date = CURRENT_TIMESTAMP");
 				sql.append(" WHERE");
-				sql.append(" id = " + id);
+				sql.append(" id = ?");
+
+				ps = connection.prepareStatement(sql.toString());
+
+				ps.setInt(1, user.getId());
+
 			} else {
 				sql.append("UPDATE users SET");
 				sql.append(" status = 0");
 				sql.append(", updated_date = CURRENT_TIMESTAMP");
 				sql.append(" WHERE");
-				sql.append(" id = " + id);
-			}
+				sql.append(" id = ?");
 
-			ps = connection.prepareStatement(sql.toString());
+				ps = connection.prepareStatement(sql.toString());
+
+				ps.setInt(1, user.getId());
+			}
 
 			int count = ps.executeUpdate();
 			if (count == 0) {
