@@ -32,7 +32,7 @@ public class SignUpServlet extends HttpServlet {
 		request.setAttribute("branchList", branchList);
 		request.setAttribute("postList", postList);
 
-		response.sendRedirect("./");
+		request.getRequestDispatcher("signup.jsp").forward(request, response);
 	}
 
 	@Override
@@ -55,6 +55,13 @@ public class SignUpServlet extends HttpServlet {
 				if (id ==0) {
 					messages.add("ログインIDが既に存在します");
 					request.setAttribute("errorMessages", messages);
+
+					List<User> branchList = new BranchService().getBranches();
+					List<User> postList = new PostService().getPosts();
+					request.setAttribute("branchList", branchList);
+					request.setAttribute("postList", postList);
+
+
 					request.getRequestDispatcher("signup.jsp").forward(request, response);
 				}
 
@@ -98,7 +105,7 @@ public class SignUpServlet extends HttpServlet {
 			messages.add("ユーザー名を入力してください");
 		}
 
-		if(!name.matches(".{1,10}")) {
+		if(name.length()>10) {
 			messages.add("ユーザー名10文字以内にしてください");
 		}
 

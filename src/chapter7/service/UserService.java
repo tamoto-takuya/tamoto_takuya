@@ -27,7 +27,7 @@ public class UserService {
 
 			UserDao userDao = new UserDao();
 
-			if (userDao.loginId(connection, user)==0) {
+			if (userDao.loginId(connection, user)==null) {
 				userDao.insert(connection, user);
 				commit(connection);
 				return 1;
@@ -95,7 +95,7 @@ public class UserService {
 		}
 	}
 
-	public void update(User user) {
+	public int update(User user) throws SQLException {
 
 		Connection connection = null;
 		try {
@@ -106,9 +106,14 @@ public class UserService {
 			}
 
 			UserDao userDao = new UserDao();
-			userDao.update(connection, user);
+			if (userDao.editLoginId(connection, user)==null) {
+				userDao.update(connection, user);
+				commit(connection);
+				return 1;
+			} else {
+				return 0;
+			}
 
-			commit(connection);
 		} catch (RuntimeException e) {
 			rollback(connection);
 			throw e;

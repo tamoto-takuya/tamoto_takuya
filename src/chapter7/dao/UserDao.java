@@ -59,20 +59,20 @@ public class UserDao {
 		}
 	}
 
-	public int loginId(Connection connection, User user)
+	public String loginId(Connection connection, User user)
 			throws SQLException {
 		PreparedStatement ps = null;
 
 		try {
-			String sql = "SELECT COUNT(login_id ='" + user.getLoginId() + "' or null)FROM users";
+			String sql = "SELECT login_id,COUNT(*)FROM users WHERE id";
 
 			ps = connection.prepareStatement(sql);
-			int id = 0;
+			String id = null;
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				id = rs.getInt("COUNT(login_id ='" + user.getLoginId() + "' or null)");
-			}
-			return id;
+			 id = rs.getString("login_id");
+		}
+			return id ;
 
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
@@ -243,6 +243,28 @@ public class UserDao {
 			if (count == 0) {
 				throw new NoRowsUpdatedRuntimeException();
 			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
+	public String editLoginId(Connection connection, User user)
+			throws SQLException {
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "SELECT login_id,COUNT(*)FROM users WHERE id";
+
+			ps = connection.prepareStatement(sql);
+			String id = null;
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+			 id = rs.getString("login_id");
+		}
+			return id ;
+
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
 		} finally {

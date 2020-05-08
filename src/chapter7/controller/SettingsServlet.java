@@ -1,6 +1,7 @@
 package chapter7.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class SettingsServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		//ID取得の為、int型へ変更
+
 		int setId = Integer.parseInt(request.getParameter("id"));
 		User editUser = new UserService().getUser(setId);
 
@@ -37,7 +38,7 @@ public class SettingsServlet extends HttpServlet {
 		request.setAttribute("postList", postList);
 		request.setAttribute("editUser", editUser);
 
-		response.sendRedirect("./");
+		request.getRequestDispatcher("settings.jsp").forward(request, response);
 	}
 
 	@Override
@@ -51,13 +52,27 @@ public class SettingsServlet extends HttpServlet {
 		if (isValid(request, messages) == true) {
 
 			try {
-				new UserService().update(editUser);
+				int id = new UserService().update(editUser);
+				if (id ==0) {
+					messages.add("ログインIDが既に存在します");
+					session.setAttribute("errorMessages", messages);
+
+					List<User> branchList = new BranchService().getBranches();
+					List<User> postList = new PostService().getPosts();
+					request.setAttribute("branchList", branchList);
+					request.setAttribute("postList", postList);
+					request.setAttribute("editUser", editUser);
+					request.getRequestDispatcher("settings.jsp").forward(request, response);
+
+				}
 			} catch (NoRowsUpdatedRuntimeException e) {
 				messages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
 				session.setAttribute("errorMessages", messages);
 				request.setAttribute("editUser", editUser);
 				request.getRequestDispatcher("settings.jsp").forward(request, response);
 				return;
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 
 			response.sendRedirect("./");
@@ -66,7 +81,6 @@ public class SettingsServlet extends HttpServlet {
 
 			List<User> branchList = new BranchService().getBranches();
 			List<User> postList = new PostService().getPosts();
-
 			request.setAttribute("branchList", branchList);
 			request.setAttribute("postList", postList);
 			request.setAttribute("editUser", editUser);
@@ -93,6 +107,7 @@ public class SettingsServlet extends HttpServlet {
 		String password1 = request.getParameter("password1");
 		String name = request.getParameter("name");
 
+
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
 		}
@@ -105,7 +120,7 @@ public class SettingsServlet extends HttpServlet {
 			messages.add("ユーザー名を入力してください");
 		}
 
-		if(!name.matches(".{1,10}")) {
+		if(name.length()>10) {
 			messages.add("ユーザー名10文字以内にしてください");
 		}
 
