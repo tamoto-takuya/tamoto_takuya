@@ -27,7 +27,7 @@ public class UserService {
 
 			UserDao userDao = new UserDao();
 
-			if (userDao.loginId(connection, user)==null) {
+			if (userDao.checkLoginId(connection, user).equals("0")) {
 				userDao.insert(connection, user);
 				commit(connection);
 				return 1;
@@ -95,7 +95,7 @@ public class UserService {
 		}
 	}
 
-	public int update(User user) throws SQLException {
+	public void update(User user) throws SQLException {
 
 		Connection connection = null;
 		try {
@@ -106,7 +106,33 @@ public class UserService {
 			}
 
 			UserDao userDao = new UserDao();
-			if (userDao.editLoginId(connection, user)==null) {
+			userDao.update(connection, user);
+			commit(connection);
+
+
+		} catch (RuntimeException e) {
+			rollback(connection);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+
+	public int checkUpdate(User user) throws SQLException {
+
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			if (StringUtils.isEmpty(user.getPassword()) == false) {
+				String encPassword = CipherUtil.encrypt(user.getPassword());
+				user.setPassword(encPassword);
+			}
+
+			UserDao userDao = new UserDao();
+			if (userDao.checkLoginId(connection, user).equals("0")) {
 				userDao.update(connection, user);
 				commit(connection);
 				return 1;
@@ -124,6 +150,7 @@ public class UserService {
 			close(connection);
 		}
 	}
+
 
 	public void updateStatus(User user) {
 		Connection connection = null;

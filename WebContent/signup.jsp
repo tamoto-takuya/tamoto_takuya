@@ -38,20 +38,31 @@
 
 				<label for="branch_id">支店名</label><br>
 				<select style="width: 175px" name="branch_id" id="branch_id">
-					<option value="">--------</option>
 					<c:forEach items="${branchList}" var="branch">
-						<option value="${branch.branchId}">${branch.branchName}</option>
+						<c:choose>
+							<c:when  test="${branch.branchId==inputUser.branchId}">
+								<option value="${branch.branchId}" selected>${branch.branchName}</option>
+							</c:when>
+							<c:otherwise>
+								<option value="${branch.branchId}">${branch.branchName}</option>
+							</c:otherwise>
+						</c:choose>
 					</c:forEach>
 				</select><br>
 
 				<label for="post_id">部署・役職</label><br>
 				<select style="width: 175px" name="post_id" id="post_id">
-					<option value="">--------</option>
 					<c:forEach items="${postList}" var="post">
-						<option value="${post.postId}">${post.postName}</option>
+						<c:choose>
+							<c:when  test="${post.postId==inputUser.postId}">
+								<option value="${post.postId}" selected>${post.postName}</option>
+							</c:when>
+							<c:otherwise>
+								<option value="${post.postId}">${post.postName}</option>
+							</c:otherwise>
+						</c:choose>
 					</c:forEach>
 				</select><br>
-
 				<input type="submit" value="登録">  <a href="./">戻る</a>
 			</form>
 		</div>

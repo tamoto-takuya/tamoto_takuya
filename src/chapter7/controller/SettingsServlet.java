@@ -45,30 +45,36 @@ public class SettingsServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
+		int setId = Integer.parseInt(request.getParameter("id"));
+		User editUser = new UserService().getUser(setId);
+
 		List<String> messages = new ArrayList<String>();
+		List<User> branchList = new BranchService().getBranches();
+		List<User> postList = new PostService().getPosts();
 		HttpSession session = request.getSession();
-		User editUser = getEditUser(request);
+		User inputUser = getInputUser(request);
 
 		if (isValid(request, messages) == true) {
 
 			try {
-				int id = new UserService().update(editUser);
-				if (id ==0) {
-					messages.add("ログインIDが既に存在します");
-					session.setAttribute("errorMessages", messages);
+				if (inputUser.getLoginId().equals(editUser.getLoginId())) {
+					new UserService().update(inputUser);
+				} else {
+					int id =new UserService().checkUpdate(inputUser);
+					if (id ==0) {
+						messages.add("ログインIDが既に存在します");
+						session.setAttribute("errorMessages", messages);
+						request.setAttribute("branchList", branchList);
+						request.setAttribute("postList", postList);
+						request.setAttribute("editUser", inputUser);
 
-					List<User> branchList = new BranchService().getBranches();
-					List<User> postList = new PostService().getPosts();
-					request.setAttribute("branchList", branchList);
-					request.setAttribute("postList", postList);
-					request.setAttribute("editUser", editUser);
-					request.getRequestDispatcher("settings.jsp").forward(request, response);
-
+						request.getRequestDispatcher("settings.jsp").forward(request, response);
+					}
 				}
 			} catch (NoRowsUpdatedRuntimeException e) {
 				messages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
 				session.setAttribute("errorMessages", messages);
-				request.setAttribute("editUser", editUser);
+				request.setAttribute("editUser", inputUser);
 				request.getRequestDispatcher("settings.jsp").forward(request, response);
 				return;
 			} catch (SQLException e) {
@@ -78,27 +84,24 @@ public class SettingsServlet extends HttpServlet {
 			response.sendRedirect("./");
 		} else {
 			session.setAttribute("errorMessages", messages);
-
-			List<User> branchList = new BranchService().getBranches();
-			List<User> postList = new PostService().getPosts();
 			request.setAttribute("branchList", branchList);
 			request.setAttribute("postList", postList);
-			request.setAttribute("editUser", editUser);
+			request.setAttribute("editUser", inputUser);
 			request.getRequestDispatcher("settings.jsp").forward(request, response);
 		}
 	}
 
-	private User getEditUser(HttpServletRequest request)
+	private User getInputUser(HttpServletRequest request)
 			throws IOException, ServletException {
 
-		User editUser = new User();
-		editUser.setId(Integer.parseInt(request.getParameter("id")));
-		editUser.setLoginId(request.getParameter("login_id"));
-		editUser.setPassword(request.getParameter("password"));
-		editUser.setName(request.getParameter("name"));
-		editUser.setBranchId(Integer.parseInt(request.getParameter("branch_id")));
-		editUser.setPostId(Integer.parseInt(request.getParameter("post_id")));
-		return editUser;
+		User inputUser = new User();
+		inputUser.setId(Integer.parseInt(request.getParameter("id")));
+		inputUser.setLoginId(request.getParameter("login_id"));
+		inputUser.setPassword(request.getParameter("password"));
+		inputUser.setName(request.getParameter("name"));
+		inputUser.setBranchId(Integer.parseInt(request.getParameter("branch_id")));
+		inputUser.setPostId(Integer.parseInt(request.getParameter("post_id")));
+		return inputUser;
 	}
 
 	private boolean isValid(HttpServletRequest request, List<String> messages) {
@@ -106,7 +109,16 @@ public class SettingsServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String password1 = request.getParameter("password1");
 		String name = request.getParameter("name");
+		int branchId = Integer.parseInt(request.getParameter("branch_id"));
+		int postId = Integer.parseInt(request.getParameter("post_id"));
 
+		if (branchId ==1) {
+			messages.add("支店名を入力してください");
+		}
+
+		if (postId ==1) {
+			messages.add("部署/役職名を入力してください");
+		}
 
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
