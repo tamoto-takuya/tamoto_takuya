@@ -40,28 +40,26 @@ public class SignUpServlet extends HttpServlet {
 			HttpServletResponse response) throws IOException, ServletException {
 
 		List<String> messages = new ArrayList<String>();
+		List<User> branchList = new BranchService().getBranches();
+		List<User> postList = new PostService().getPosts();
+
+		User user = new User();
+		user.setLoginId(request.getParameter("login_id"));
+		user.setPassword(request.getParameter("password"));
+		user.setName(request.getParameter("name"));
+		user.setBranchId(Integer.parseInt(request.getParameter("branch_id")));
+		user.setPostId(Integer.parseInt(request.getParameter("post_id")));
 
 		if (isValid(request, messages) == true) {
-
-			User user = new User();
-			user.setLoginId(request.getParameter("login_id"));
-			user.setPassword(request.getParameter("password"));
-			user.setName(request.getParameter("name"));
-			user.setBranchId(Integer.parseInt(request.getParameter("branch_id")));
-			user.setPostId(Integer.parseInt(request.getParameter("post_id")));
 
 			try {
 				int id = new UserService().register(user);
 				if (id ==0) {
 					messages.add("ログインIDが既に存在します");
 					request.setAttribute("errorMessages", messages);
-
-					List<User> branchList = new BranchService().getBranches();
-					List<User> postList = new PostService().getPosts();
 					request.setAttribute("branchList", branchList);
 					request.setAttribute("postList", postList);
-
-
+					request.setAttribute("inputUser", user);
 					request.getRequestDispatcher("signup.jsp").forward(request, response);
 				}
 
@@ -73,12 +71,9 @@ public class SignUpServlet extends HttpServlet {
 		} else {
 
 			request.setAttribute("errorMessages", messages);
-			List<User> branchList = new BranchService().getBranches();
-			List<User> postList = new PostService().getPosts();
-
 			request.setAttribute("branchList", branchList);
 			request.setAttribute("postList", postList);
-
+			request.setAttribute("inputUser", user);
 			request.getRequestDispatcher("signup.jsp").forward(request, response);
 		}
 	}
@@ -88,10 +83,19 @@ public class SignUpServlet extends HttpServlet {
 		String name = request.getParameter("name");
 		String password = request.getParameter("password");
 		String password1 = request.getParameter("password1");
+		int branchId = Integer.parseInt(request.getParameter("branch_id"));
+		int postId = Integer.parseInt(request.getParameter("post_id"));
 
 		request.setAttribute("name", name);
 		request.setAttribute("login_id", loginId);
 
+		if (branchId ==1) {
+			messages.add("支店名を入力してください");
+		}
+
+		if (postId ==1) {
+			messages.add("部署/役職名を入力してください");
+		}
 
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
