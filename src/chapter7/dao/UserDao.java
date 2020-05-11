@@ -70,12 +70,12 @@ public class UserDao {
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, user.getLoginId());
 
-			String id = null;
+			String num = null;
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				id = rs.getString("COUNT(*)");
+				num = rs.getString("COUNT(*)");
 			}
-			return id ;
+			return num ;
 
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);

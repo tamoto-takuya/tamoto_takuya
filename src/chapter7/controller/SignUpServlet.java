@@ -53,8 +53,8 @@ public class SignUpServlet extends HttpServlet {
 		if (isValid(request, messages) == true) {
 
 			try {
-				int id = new UserService().register(user);
-				if (id ==0) {
+				int checkUser = new UserService().register(user);
+				if (checkUser ==0) {
 					messages.add("ログインIDが既に存在します");
 					request.setAttribute("errorMessages", messages);
 					request.setAttribute("branchList", branchList);
@@ -62,14 +62,16 @@ public class SignUpServlet extends HttpServlet {
 					request.setAttribute("inputUser", user);
 					request.getRequestDispatcher("signup.jsp").forward(request, response);
 				}
-
 			} catch (SQLException e) {
-				e.printStackTrace();
+				messages.add("登録に失敗しました");
+				request.setAttribute("errorMessages", messages);
+				request.setAttribute("branchList", branchList);
+				request.setAttribute("postList", postList);
+				request.setAttribute("inputUser", user);
+				request.getRequestDispatcher("signup.jsp").forward(request, response);
 			}
-
 			response.sendRedirect("./");
 		} else {
-
 			request.setAttribute("errorMessages", messages);
 			request.setAttribute("branchList", branchList);
 			request.setAttribute("postList", postList);

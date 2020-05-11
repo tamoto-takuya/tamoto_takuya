@@ -37,7 +37,6 @@ public class SettingsServlet extends HttpServlet {
 		request.setAttribute("branchList", branchList);
 		request.setAttribute("postList", postList);
 		request.setAttribute("editUser", editUser);
-
 		request.getRequestDispatcher("settings.jsp").forward(request, response);
 	}
 
@@ -60,15 +59,13 @@ public class SettingsServlet extends HttpServlet {
 				if (inputUser.getLoginId().equals(editUser.getLoginId())) {
 					new UserService().update(inputUser);
 				} else {
-
-					int id =new UserService().checkUpdate(inputUser);
-					if (id ==0) {
+					int checkUser =new UserService().checkUpdate(inputUser);
+					if (checkUser ==0) {
 						messages.add("ログインIDが既に存在します");
 						session.setAttribute("errorMessages", messages);
 						request.setAttribute("branchList", branchList);
 						request.setAttribute("postList", postList);
 						request.setAttribute("editUser", inputUser);
-
 						request.getRequestDispatcher("settings.jsp").forward(request, response);
 					}
 				}
@@ -79,9 +76,13 @@ public class SettingsServlet extends HttpServlet {
 				request.getRequestDispatcher("settings.jsp").forward(request, response);
 				return;
 			} catch (SQLException e) {
-				e.printStackTrace();
+				messages.add("登録に失敗しました");
+				request.setAttribute("errorMessages", messages);
+				request.setAttribute("branchList", branchList);
+				request.setAttribute("postList", postList);
+				request.setAttribute("editUser", inputUser);
+				request.getRequestDispatcher("signup.jsp").forward(request, response);
 			}
-
 			response.sendRedirect("./");
 		} else {
 			session.setAttribute("errorMessages", messages);

@@ -5,3 +5,6 @@
 /build
 /WebContent/WEB-INF
 /WebContent/META-INF
+/src/chapter7/controller/SettingsServlet.java.BASE.java
+/src/chapter7/controller/SettingsServlet.java.LOCAL.java
+/src/chapter7/controller/SettingsServlet.java.REMOTE.java
