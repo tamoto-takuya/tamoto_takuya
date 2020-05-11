@@ -151,6 +151,7 @@ public class UserService {
 		}
 	}
 
+
 	public void updateStatus(User user) {
 		Connection connection = null;
 		try {

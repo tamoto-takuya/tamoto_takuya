@@ -60,7 +60,8 @@ public class SettingsServlet extends HttpServlet {
 				if (inputUser.getLoginId().equals(editUser.getLoginId())) {
 					new UserService().update(inputUser);
 				} else {
-					int id = new UserService().checkUpdate(inputUser);
+
+					int id =new UserService().checkUpdate(inputUser);
 					if (id ==0) {
 						messages.add("ログインIDが既に存在します");
 						session.setAttribute("errorMessages", messages);
