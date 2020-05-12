@@ -1,7 +1,6 @@
 package chapter7.controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,15 +36,13 @@ public class SettingsServlet extends HttpServlet {
 		request.setAttribute("branchList", branchList);
 		request.setAttribute("postList", postList);
 		request.setAttribute("editUser", editUser);
+
 		request.getRequestDispatcher("settings.jsp").forward(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
-		int setId = Integer.parseInt(request.getParameter("id"));
-		User editUser = new UserService().getUser(setId);
 
 		List<String> messages = new ArrayList<String>();
 		List<User> branchList = new BranchService().getBranches();
@@ -56,11 +53,8 @@ public class SettingsServlet extends HttpServlet {
 		if (isValid(request, messages) == true) {
 
 			try {
-				if (inputUser.getLoginId().equals(editUser.getLoginId())) {
-					new UserService().update(inputUser);
-				} else {
-					int checkUser =new UserService().checkUpdate(inputUser);
-					if (checkUser ==0) {
+				boolean existLoginId = new UserService().update(inputUser);
+					if (existLoginId == true) {
 						messages.add("ログインIDが既に存在します");
 						session.setAttribute("errorMessages", messages);
 						request.setAttribute("branchList", branchList);
@@ -68,21 +62,14 @@ public class SettingsServlet extends HttpServlet {
 						request.setAttribute("editUser", inputUser);
 						request.getRequestDispatcher("settings.jsp").forward(request, response);
 					}
-				}
 			} catch (NoRowsUpdatedRuntimeException e) {
 				messages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
 				session.setAttribute("errorMessages", messages);
 				request.setAttribute("editUser", inputUser);
 				request.getRequestDispatcher("settings.jsp").forward(request, response);
 				return;
-			} catch (SQLException e) {
-				messages.add("登録に失敗しました");
-				request.setAttribute("errorMessages", messages);
-				request.setAttribute("branchList", branchList);
-				request.setAttribute("postList", postList);
-				request.setAttribute("editUser", inputUser);
-				request.getRequestDispatcher("signup.jsp").forward(request, response);
 			}
+
 			response.sendRedirect("./");
 		} else {
 			session.setAttribute("errorMessages", messages);
@@ -114,11 +101,11 @@ public class SettingsServlet extends HttpServlet {
 		int branchId = Integer.parseInt(request.getParameter("branch_id"));
 		int postId = Integer.parseInt(request.getParameter("post_id"));
 
-		if (branchId ==1) {
+		if (branchId == 1) {
 			messages.add("支店名を入力してください");
 		}
 
-		if (postId ==1) {
+		if (postId == 1) {
 			messages.add("部署/役職名を入力してください");
 		}
 
@@ -134,7 +121,7 @@ public class SettingsServlet extends HttpServlet {
 			messages.add("ユーザー名を入力してください");
 		}
 
-		if(name.length()>10) {
+		if(name.length() > 10) {
 			messages.add("ユーザー名10文字以内にしてください");
 		}
 

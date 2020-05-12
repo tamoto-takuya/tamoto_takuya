@@ -32,7 +32,6 @@ public class UserPostDao {
 		}
 	}
 
-	//
 	private List<User> toPostList(ResultSet rs) throws SQLException {
 
 		List<User> ret = new ArrayList<User>();

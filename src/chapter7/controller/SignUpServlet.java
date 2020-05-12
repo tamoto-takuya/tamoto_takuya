@@ -1,7 +1,6 @@
 package chapter7.controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,24 +51,16 @@ public class SignUpServlet extends HttpServlet {
 
 		if (isValid(request, messages) == true) {
 
-			try {
-				int checkUser = new UserService().register(user);
-				if (checkUser ==0) {
-					messages.add("ログインIDが既に存在します");
-					request.setAttribute("errorMessages", messages);
-					request.setAttribute("branchList", branchList);
-					request.setAttribute("postList", postList);
-					request.setAttribute("inputUser", user);
-					request.getRequestDispatcher("signup.jsp").forward(request, response);
-				}
-			} catch (SQLException e) {
-				messages.add("登録に失敗しました");
+			boolean existLoginId = new UserService().register(user);
+			if (existLoginId == true) {
+				messages.add("ログインIDが既に存在します");
 				request.setAttribute("errorMessages", messages);
 				request.setAttribute("branchList", branchList);
 				request.setAttribute("postList", postList);
 				request.setAttribute("inputUser", user);
 				request.getRequestDispatcher("signup.jsp").forward(request, response);
 			}
+
 			response.sendRedirect("./");
 		} else {
 			request.setAttribute("errorMessages", messages);
@@ -91,11 +82,11 @@ public class SignUpServlet extends HttpServlet {
 		request.setAttribute("name", name);
 		request.setAttribute("login_id", loginId);
 
-		if (branchId ==1) {
+		if (branchId == 1) {
 			messages.add("支店名を入力してください");
 		}
 
-		if (postId ==1) {
+		if (postId == 1) {
 			messages.add("部署/役職名を入力してください");
 		}
 
@@ -111,7 +102,7 @@ public class SignUpServlet extends HttpServlet {
 			messages.add("ユーザー名を入力してください");
 		}
 
-		if(name.length()>10) {
+		if(name.length() > 10) {
 			messages.add("ユーザー名10文字以内にしてください");
 		}
 

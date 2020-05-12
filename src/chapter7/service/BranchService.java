@@ -14,7 +14,6 @@ public class BranchService {
 
 	public List<User> getBranches() {
 
-
 		Connection connection = null;
 		try {
 			connection = getConnection();

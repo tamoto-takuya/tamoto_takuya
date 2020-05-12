@@ -4,7 +4,6 @@ import static chapter7.utils.CloseableUtil.*;
 import static chapter7.utils.DBUtil.*;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,7 +15,7 @@ import chapter7.utils.CipherUtil;
 
 public class UserService {
 
-	public int register(User user) throws SQLException {
+	public boolean register(User user) {
 
 		Connection connection = null;
 		try {
@@ -27,15 +26,13 @@ public class UserService {
 
 			UserDao userDao = new UserDao();
 
-			if (userDao.checkLoginId(connection, user).equals("0")) {
+			if (userDao.existLoginId(connection, user).equals("0")) {
 				userDao.insert(connection, user);
 				commit(connection);
-				return 1;
+				return false;
 			} else {
-				return 0;
+				return true;
 			}
-
-
 		} catch (RuntimeException e) {
 			rollback(connection);
 			throw e;
@@ -95,7 +92,7 @@ public class UserService {
 		}
 	}
 
-	public void update(User user) throws SQLException {
+	public boolean update(User user) {
 
 		Connection connection = null;
 		try {
@@ -106,38 +103,13 @@ public class UserService {
 			}
 
 			UserDao userDao = new UserDao();
-			userDao.update(connection, user);
-			commit(connection);
 
-
-		} catch (RuntimeException e) {
-			rollback(connection);
-			throw e;
-		} catch (Error e) {
-			rollback(connection);
-			throw e;
-		} finally {
-			close(connection);
-		}
-	}
-
-	public int checkUpdate(User user) throws SQLException {
-
-		Connection connection = null;
-		try {
-			connection = getConnection();
-			if (StringUtils.isEmpty(user.getPassword()) == false) {
-				String encPassword = CipherUtil.encrypt(user.getPassword());
-				user.setPassword(encPassword);
-			}
-
-			UserDao userDao = new UserDao();
-			if (userDao.checkLoginId(connection, user).equals("0")) {
+			if (userDao.existLoginId(connection, user).equals("0")) {
 				userDao.update(connection, user);
 				commit(connection);
-				return 1;
+				return false;
 			} else {
-				return 0;
+				return true;
 			}
 
 		} catch (RuntimeException e) {
@@ -150,7 +122,6 @@ public class UserService {
 			close(connection);
 		}
 	}
-
 
 	public void updateStatus(User user) {
 		Connection connection = null;

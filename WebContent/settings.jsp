@@ -43,7 +43,7 @@
 					<c:forEach items="${branchList}" var="branch">
 						<c:choose>
 							<c:when  test="${branch.branchId==editUser.branchId}">
-								<option value="${branch.branchId}" selected>${branch.branchName}</option>
+								<option value= "${branch.branchId}" selected>${branch.branchName}</option>
 							</c:when>
 							<c:otherwise>
 								<option value="${branch.branchId}">${branch.branchName}</option>

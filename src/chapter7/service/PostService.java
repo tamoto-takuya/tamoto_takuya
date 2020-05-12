@@ -15,7 +15,6 @@ public class PostService {
 
 	public List<User> getPosts() {
 
-
 		Connection connection = null;
 		try {
 			connection = getConnection();
