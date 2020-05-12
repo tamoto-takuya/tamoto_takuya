@@ -64,7 +64,7 @@ public class UserDao {
 
 		try {
 
-			String sql = "SELECT COUNT(*)FROM users WHERE login_id = ? AND id != ?";
+			String sql = "SELECT COUNT(*)FROM users WHERE login_id = ? AND id <> ?";
 
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, user.getLoginId());
