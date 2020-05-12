@@ -65,6 +65,8 @@ public class SettingsServlet extends HttpServlet {
 			} catch (NoRowsUpdatedRuntimeException e) {
 				messages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
 				session.setAttribute("errorMessages", messages);
+				request.setAttribute("branchList", branchList);
+				request.setAttribute("postList", postList);
 				request.setAttribute("editUser", inputUser);
 				request.getRequestDispatcher("settings.jsp").forward(request, response);
 				return;
