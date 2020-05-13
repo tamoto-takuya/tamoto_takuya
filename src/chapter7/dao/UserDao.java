@@ -59,23 +59,19 @@ public class UserDao {
 		}
 	}
 
-	public String existLoginId(Connection connection, User user) {
+	public boolean existLoginId(Connection connection, User user) {
 		PreparedStatement ps = null;
 
 		try {
 
-			String sql = "SELECT COUNT(*)FROM users WHERE login_id = ? AND id <> ?";
+			String sql = "SELECT * FROM users WHERE login_id = ? AND id <> ?";
 
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, user.getLoginId());
 			ps.setInt(2, user.getId());
 
-			String existLoginId = null;
 			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				existLoginId = rs.getString("COUNT(*)");
-			}
-			return existLoginId;
+			return rs.next();
 
 		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);

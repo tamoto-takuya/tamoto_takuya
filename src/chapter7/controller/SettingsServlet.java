@@ -36,7 +36,6 @@ public class SettingsServlet extends HttpServlet {
 		request.setAttribute("branchList", branchList);
 		request.setAttribute("postList", postList);
 		request.setAttribute("editUser", editUser);
-
 		request.getRequestDispatcher("settings.jsp").forward(request, response);
 	}
 
@@ -50,20 +49,18 @@ public class SettingsServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		User inputUser = getInputUser(request);
 
-		if (isValid(request, messages) == true) {
-
-			try {
-				boolean existLoginId = new UserService().update(inputUser);
-					if (existLoginId == true) {
-						messages.add("ログインIDが既に存在します");
-						session.setAttribute("errorMessages", messages);
-						request.setAttribute("branchList", branchList);
-						request.setAttribute("postList", postList);
-						request.setAttribute("editUser", inputUser);
-						request.getRequestDispatcher("settings.jsp").forward(request, response);
-					}
-			} catch (NoRowsUpdatedRuntimeException e) {
-				messages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
+		if (isValid(request, messages) == false) {
+			session.setAttribute("errorMessages", messages);
+			request.setAttribute("branchList", branchList);
+			request.setAttribute("postList", postList);
+			request.setAttribute("editUser", inputUser);
+			request.getRequestDispatcher("settings.jsp").forward(request, response);
+			return;
+		}
+		try {
+			boolean existLoginId = new UserService().update(inputUser);
+			if (existLoginId == true) {
+				messages.add("ログインIDが既に存在します");
 				session.setAttribute("errorMessages", messages);
 				request.setAttribute("branchList", branchList);
 				request.setAttribute("postList", postList);
@@ -71,15 +68,18 @@ public class SettingsServlet extends HttpServlet {
 				request.getRequestDispatcher("settings.jsp").forward(request, response);
 				return;
 			}
-
-			response.sendRedirect("./");
-		} else {
+		} catch (NoRowsUpdatedRuntimeException e) {
+			messages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
 			session.setAttribute("errorMessages", messages);
 			request.setAttribute("branchList", branchList);
 			request.setAttribute("postList", postList);
 			request.setAttribute("editUser", inputUser);
 			request.getRequestDispatcher("settings.jsp").forward(request, response);
+			return;
 		}
+
+		response.sendRedirect("./");
+
 	}
 
 	private User getInputUser(HttpServletRequest request)
