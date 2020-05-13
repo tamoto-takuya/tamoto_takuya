@@ -49,26 +49,26 @@ public class SignUpServlet extends HttpServlet {
 		user.setBranchId(Integer.parseInt(request.getParameter("branch_id")));
 		user.setPostId(Integer.parseInt(request.getParameter("post_id")));
 
-		if (isValid(request, messages) == true) {
-
-			boolean existLoginId = new UserService().register(user);
-			if (existLoginId == true) {
-				messages.add("ログインIDが既に存在します");
-				request.setAttribute("errorMessages", messages);
-				request.setAttribute("branchList", branchList);
-				request.setAttribute("postList", postList);
-				request.setAttribute("inputUser", user);
-				request.getRequestDispatcher("signup.jsp").forward(request, response);
-			}
-			response.sendRedirect("./");
-
-		} else {
+		if (isValid(request, messages) == false) {
 			request.setAttribute("errorMessages", messages);
 			request.setAttribute("branchList", branchList);
 			request.setAttribute("postList", postList);
 			request.setAttribute("inputUser", user);
 			request.getRequestDispatcher("signup.jsp").forward(request, response);
+			return;
 		}
+
+		boolean existLoginId = new UserService().register(user);
+		if (existLoginId == true) {
+			messages.add("ログインIDが既に存在します");
+			request.setAttribute("errorMessages", messages);
+			request.setAttribute("branchList", branchList);
+			request.setAttribute("postList", postList);
+			request.setAttribute("inputUser", user);
+			request.getRequestDispatcher("signup.jsp").forward(request, response);
+			return;
+		}
+			response.sendRedirect("./");
 	}
 
 	private boolean isValid(HttpServletRequest request, List<String> messages) {
