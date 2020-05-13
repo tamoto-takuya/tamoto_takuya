@@ -60,8 +60,8 @@ public class SignUpServlet extends HttpServlet {
 				request.setAttribute("inputUser", user);
 				request.getRequestDispatcher("signup.jsp").forward(request, response);
 			}
-
 			response.sendRedirect("./");
+
 		} else {
 			request.setAttribute("errorMessages", messages);
 			request.setAttribute("branchList", branchList);

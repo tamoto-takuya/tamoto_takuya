@@ -26,7 +26,7 @@ public class UserService {
 
 			UserDao userDao = new UserDao();
 
-			if (userDao.existLoginId(connection, user).equals("0")) {
+			if (!userDao.existLoginId(connection, user)) {
 				userDao.insert(connection, user);
 				commit(connection);
 				return false;
@@ -104,7 +104,7 @@ public class UserService {
 
 			UserDao userDao = new UserDao();
 
-			if (userDao.existLoginId(connection, user).equals("0")) {
+			if (!userDao.existLoginId(connection, user)) {
 				userDao.update(connection, user);
 				commit(connection);
 				return false;
