@@ -68,7 +68,7 @@ public class SignUpServlet extends HttpServlet {
 			request.getRequestDispatcher("signup.jsp").forward(request, response);
 			return;
 		}
-			response.sendRedirect("./");
+		response.sendRedirect("./");
 	}
 
 	private boolean isValid(HttpServletRequest request, List<String> messages) {
