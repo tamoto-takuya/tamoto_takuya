@@ -82,28 +82,12 @@ public class SignUpServlet extends HttpServlet {
 		request.setAttribute("name", name);
 		request.setAttribute("login_id", loginId);
 
-		if (branchId == 1) {
-			messages.add("支店名を入力してください");
-		}
-
-		if (postId == 1) {
-			messages.add("部署/役職名を入力してください");
-		}
-
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
 		}
 
 		if(!loginId.matches("[0-9a-zA-Z]{6,20}")) {
 			messages.add("ログインID半角英数字6文字以上20文字以下で入力してください");
-		}
-
-		if (StringUtils.isEmpty(name) == true) {
-			messages.add("ユーザー名を入力してください");
-		}
-
-		if(name.length() > 10) {
-			messages.add("ユーザー名10文字以内にしてください");
 		}
 
 		if (StringUtils.isEmpty(password) == true) {
@@ -116,6 +100,22 @@ public class SignUpServlet extends HttpServlet {
 
 		if (!password.equals(password1)) {
 			messages.add("パスワードが一致しません");
+		}
+
+		if (StringUtils.isEmpty(name) == true) {
+			messages.add("ユーザー名を入力してください");
+		}
+
+		if(name.length() > 10) {
+			messages.add("ユーザー名10文字以内にしてください");
+		}
+
+		if (branchId == 1) {
+			messages.add("支店名を入力してください");
+		}
+
+		if (postId == 1) {
+			messages.add("部署/役職名を入力してください");
 		}
 
 		if (messages.size() == 0) {

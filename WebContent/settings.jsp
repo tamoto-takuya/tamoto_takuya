@@ -66,7 +66,7 @@
 					</c:forEach>
 				</select><br>
 
-				<input type="submit" value="登録" />    <a href="./">戻る</a>
+				<input type="submit" value="編集" />    <a href="./">戻る</a>
 			</form>
 		</div>
 	</body>

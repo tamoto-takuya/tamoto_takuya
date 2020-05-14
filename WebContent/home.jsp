@@ -41,13 +41,13 @@
 								<form action="index.jsp" method="post" onClick="disp()">
 									<input name="id" value="${user.id}" id="id" type="hidden" />
 									<c:choose>
-									<c:when test="${user.status==0}">
-										<input name="status" value=0 id="id" type="hidden" />
-										<button type="submit" value="活動中">活動中</button>
+									<c:when test="${user.status==1}">
+										<input name="status" value=1 id="id" type="hidden" />
+										<button type="submit" value="停止">停止</button>
 									</c:when>
 									<c:otherwise>
-										<input name="status" value=1 id="id" type="hidden" />
-										<button type="submit" value="停止中">停止中</button>
+										<input name="status" value=0 id="id" type="hidden" />
+										<button type="submit" value="復活">復活</button>
 									</c:otherwise>
 									</c:choose>
 								</form>

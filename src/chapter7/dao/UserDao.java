@@ -38,7 +38,7 @@ public class UserDao {
 			sql.append(", ?");
 			sql.append(", ?");
 			sql.append(", ?");
-			sql.append(", '0'");
+			sql.append(", '1'");
 			sql.append(", CURRENT_TIMESTAMP"); // created_date
 			sql.append(", CURRENT_TIMESTAMP"); // updated_date
 			sql.append(")");
