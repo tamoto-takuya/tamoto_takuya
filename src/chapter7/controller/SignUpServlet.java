@@ -84,22 +84,29 @@ public class SignUpServlet extends HttpServlet {
 
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
-		}
 
-		if(!loginId.matches("[0-9a-zA-Z]{6,20}")) {
-			messages.add("ログインID半角英数字6文字以上20文字以下で入力してください");
+		} else {
+
+			if(!loginId.matches("[0-9a-zA-Z]{6,20}")) {
+				messages.add("ログインID半角英数字6文字以上20文字以下で入力してください");
+			}
 		}
 
 		if (StringUtils.isEmpty(password) == true) {
 			messages.add("パスワードを入力してください");
-		}
+		} else {
 
-		if(!password.matches("[a-zA-Z0-9!-/:-@\\[-`{-~]{6,20}")) {
-			messages.add("パスワード半角英数字6文字以上20文字以下で入力してください");
-		}
+			if (StringUtils.isEmpty(password1) == true) {
+				messages.add("確認用パスワードを入力してください");
+			}
 
-		if (!password.equals(password1)) {
-			messages.add("パスワードが一致しません");
+			if (!password.matches("[a-zA-Z0-9!-/:-@\\[-`{-~]{6,20}")) {
+				messages.add("パスワード半角英数字6文字以上20文字以下で入力してください");
+			}
+
+			if (!password.equals(password1)) {
+				messages.add("パスワードが一致しません");
+			}
 		}
 
 		if (StringUtils.isEmpty(name) == true) {
