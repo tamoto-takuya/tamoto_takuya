@@ -81,7 +81,7 @@
 				const name = document.getElementById("name").value;
 				if (name.length > 10) {
 					document.getElementById("nameError").style.display = "block";
-                	nameError.innerHTML = "※ユーザー名10文字以下で入力してください";
+					nameError.innerHTML = "※ユーザー名10文字以下で入力してください";
 				} else {
 					document.getElementById("nameError").style.display = "none";
 				}
