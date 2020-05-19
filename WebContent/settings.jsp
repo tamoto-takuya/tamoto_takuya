@@ -16,7 +16,7 @@
 				<div class="errorMessages">
 					<ul>
 						<c:forEach items="${errorMessages}" var="message">
-							<li><c:out value="${message}" />
+							<li><c:out value="${message}" /></li>
 						</c:forEach>
 					</ul>
 				</div>
@@ -33,7 +33,7 @@
 				<input name="password" type="password" id="password"/> <br />
 
 				<label for="password">パスワード確認用</label><br>
-			    <input name="password1" type="password" id="password1"> <br>
+			    <input name="confirmPass" type="password" id="confirmPass"> <br>
 
 				<label for="name">名前</label><br />
 				<input name="name" value="${editUser.name}" id="name"/><br />

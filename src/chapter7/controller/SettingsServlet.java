@@ -98,7 +98,7 @@ public class SettingsServlet extends HttpServlet {
 	private boolean isValid(HttpServletRequest request, List<String> messages) {
 		String loginId = request.getParameter("login_id");
 		String password = request.getParameter("password");
-		String password1 = request.getParameter("password1");
+		String confirmPass = request.getParameter("confirmPass");
 		String name = request.getParameter("name");
 		int branchId = Integer.parseInt(request.getParameter("branch_id"));
 		int postId = Integer.parseInt(request.getParameter("post_id"));
@@ -114,7 +114,7 @@ public class SettingsServlet extends HttpServlet {
 
 		if (StringUtils.isEmpty(password) == false) {
 
-			if (StringUtils.isEmpty(password1)) {
+			if (StringUtils.isEmpty(confirmPass)) {
 				messages.add("確認用パスワードを入力してください");
 			}
 
@@ -122,12 +122,12 @@ public class SettingsServlet extends HttpServlet {
 				messages.add("パスワード半角英数字記号6文字以上20文字以下で入力してください");
 			}
 
-			if (!password.equals(password1)) {
+			if (!password.equals(confirmPass)) {
 				messages.add("パスワードが一致しません");
 			}
 		} else {
 
-			if (!StringUtils.isEmpty(password1)) {
+			if (!StringUtils.isEmpty(confirmPass)) {
 				messages.add("パスワードを入力してください");
 			}
 		}
