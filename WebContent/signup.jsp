@@ -97,9 +97,9 @@
 					loginIdError.style.display = "none";
 				}
 
-				var password = document.getElementById("password").value;
+				var passwordValue = password.value;
 				var passPattern = /^[0-9a-zA-Z]{6,20}$/g;
-				if (!password.match(passPattern)) {
+				if (!passwordValue.match(passPattern)) {
 					passwordError.style.display = "block";
 					passwordError.innerHTML = "※パスワード半角英数字6文字以上20文字以下で入力してください";
 					isValid = false;
@@ -107,8 +107,8 @@
 					passwordError.style.display = "none";
 				}
 
-				var confirmPass = document.getElementById("confirmPass").value;
-				if (confirmPass != password) {
+				var confirmPassValue = confirmPass.value;
+				if (confirmPassValue != passwordValue) {
 					confirmPassError.style.display = "block";
 					confirmPassError.innerHTML = "※パスワードが一致しません";
 					isValid = false;
