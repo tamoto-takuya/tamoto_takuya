@@ -26,16 +26,16 @@
 			<form action="signup" method="post" onSubmit="return check()">
 
 				<label for="login_id">ログインID ※必須</label><br>
-			    <input name="login_id" value="${login_id}" id="login_id" required><br>
-			    <p class="error" id="loginIdError" style="display: none;"></p>
+				<input name="login_id" value="${login_id}" id="login_id" required><br>
+				<p class="error" id="loginIdError" style="display: none;"></p>
 
-			    <label for="password">パスワード ※必須</label><br>
-			    <input name="password" type="password" id="password" required> <br>
-			    <p class="error" id="passwordError" style="display: none;"></p>
+				<label for="password">パスワード ※必須</label><br>
+				<input name="password" type="password" id="password" required> <br>
+				<p class="error" id="passwordError" style="display: none;"></p>
 
-			    <label for="password">パスワード確認 ※必須</label><br>
-			    <input name="confirmPass" type="password" id="confirmPass" required> <br>
-			    <p class="error" id="confirmPassError" style="display: none;"></p>
+				<label for="password">パスワード確認 ※必須</label><br>
+				<input name="confirmPass" type="password" id="confirmPass" required> <br>
+				<p class="error" id="confirmPassError" style="display: none;"></p>
 
 				<label for="name">名前 ※必須</label><br>
 				<input name="name" value="${name}" id="name" required><br>
@@ -87,9 +87,9 @@
 					nameError.style.display = "none";
 				}
 
-				var loginId = document.getElementById("login_id").value;
+				var loginIdValue = login_id.value;
 				var pattern = /^[0-9a-zA-Z]{6,20}$/g;
-				if (!loginId.match(pattern)) {
+				if (!loginIdValue.match(pattern)) {
 					loginIdError.style.display = "block";
 					loginIdError.innerHTML = "※ログインID半角英数字6文字以上20文字以下で入力してください";
 					isValid = false;
