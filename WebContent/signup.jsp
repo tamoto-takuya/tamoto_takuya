@@ -76,12 +76,13 @@
 
 			function check() {
 
-				const has_error = new Boolean(false);
+				var isValid = new Boolean(true);
 
 				const name = document.getElementById("name").value;
 				if (name.length > 10) {
 					document.getElementById("nameError").style.display = "block";
 					nameError.innerHTML = "※ユーザー名10文字以下で入力してください";
+					isValid = false;
 				} else {
 					document.getElementById("nameError").style.display = "none";
 				}
@@ -91,6 +92,7 @@
 				if (!loginId.match(pattern)) {
 					document.getElementById("loginIdError").style.display = "block";
 					loginIdError.innerHTML = "※ログインID半角英数字6文字以上20文字以下で入力してください";
+					isValid = false;
 				} else {
 					document.getElementById("loginIdError").style.display = "none";
 				}
@@ -100,6 +102,7 @@
 				if (!password.match(passPattern)) {
 					document.getElementById("passwordError").style.display = "block";
 					passwordError.innerHTML = "※パスワード半角英数字6文字以上20文字以下で入力してください";
+					isValid = false;
 				} else {
 					document.getElementById("passwordError").style.display = "none";
 				}
@@ -108,16 +111,12 @@
 				if (confirmPass != password) {
 					document.getElementById("confirmPassError").style.display = "block";
 					confirmPassError.innerHTML = "※パスワードが一致しません";
+					isValid = false;
 				} else {
 					document.getElementById("confirmPassError").style.display = "none";
 				}
 
-				if (has_error) {
-					return false;
-				} else {
-					return true;
-				}
-
+				return isValid;
 			}
 
 		</script>
