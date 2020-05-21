@@ -76,44 +76,44 @@
 
 			function check() {
 
-				var isValid = new Boolean(true);
+				var isValid = true;
 
-				const name = document.getElementById("name").value;
+				var name = document.getElementById("name").value;
 				if (name.length > 10) {
-					document.getElementById("nameError").style.display = "block";
+					nameError.style.display = "block";
 					nameError.innerHTML = "※ユーザー名10文字以下で入力してください";
 					isValid = false;
 				} else {
-					document.getElementById("nameError").style.display = "none";
+					nameError.style.display = "none";
 				}
 
-				const loginId = document.getElementById("login_id").value;
-				const pattern = /^[0-9a-zA-Z]{6,20}$/g;
+				var loginId = document.getElementById("login_id").value;
+				var pattern = /^[0-9a-zA-Z]{6,20}$/g;
 				if (!loginId.match(pattern)) {
-					document.getElementById("loginIdError").style.display = "block";
+					loginIdError.style.display = "block";
 					loginIdError.innerHTML = "※ログインID半角英数字6文字以上20文字以下で入力してください";
 					isValid = false;
 				} else {
-					document.getElementById("loginIdError").style.display = "none";
+					loginIdError.style.display = "none";
 				}
 
-				const password = document.getElementById("password").value;
-				const passPattern = /^[0-9a-zA-Z]{6,20}$/g;
+				var password = document.getElementById("password").value;
+				var passPattern = /^[0-9a-zA-Z]{6,20}$/g;
 				if (!password.match(passPattern)) {
-					document.getElementById("passwordError").style.display = "block";
+					passwordError.style.display = "block";
 					passwordError.innerHTML = "※パスワード半角英数字6文字以上20文字以下で入力してください";
 					isValid = false;
 				} else {
-					document.getElementById("passwordError").style.display = "none";
+					passwordError.style.display = "none";
 				}
 
-				const confirmPass = document.getElementById("confirmPass").value;
+				var confirmPass = document.getElementById("confirmPass").value;
 				if (confirmPass != password) {
-					document.getElementById("confirmPassError").style.display = "block";
+					confirmPassError.style.display = "block";
 					confirmPassError.innerHTML = "※パスワードが一致しません";
 					isValid = false;
 				} else {
-					document.getElementById("confirmPassError").style.display = "none";
+					confirmPassError.style.display = "none";
 				}
 
 				return isValid;
